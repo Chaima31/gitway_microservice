@@ -1,0 +1,27 @@
+server:
+  port: 8072
+
+spring:
+  application:
+    name: GATEWAY
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: taxtnb-service
+          uri: lb://taxtnb-service
+          predicates:
+            - Path=/taxtnb/**
+          filters:
+            - RewritePath=/organization/(?<path>.*), /${path}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    leaseRenewalIntervalInSeconds: 10
